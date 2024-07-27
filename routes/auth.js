@@ -20,17 +20,18 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ success, errors: errors.array() });
     }
-  try{
-
-  
-    //check whether the email is exists already
-    let user = await User.findOne({ email: req.body.email });
-    if (user) {
-      success=false
-      return res
+    try{
+      
+      
+      //check whether the email is exists already
+      let user = await User.findOne({ email: req.body.email });
+      if (user) {
+        success=false
+        return res
         .status(400)
         .json({  success, error: "Sorry a user with this already exists" });
-    } 
+      } 
+      
     const slat=await bcrypt.genSalt(10)
     const  secpass=await bcrypt.hash(req.body.password,slat)
     
@@ -77,7 +78,7 @@ router.post(
         if (!user) {
           return res
             .status(400)
-            .json({ success, error: "wrong not match" });
+            .json({ success, error: "Invalid User and Password" });
         } 
         
         const passwordcom= await bcrypt.compare(password,user.password)
@@ -85,7 +86,7 @@ router.post(
           success=false
             return res
             .status(400)
-            .json({ success,error: "already exists" });
+            .json({ success,error: "Invalid User and Password" });
 
         }
         
